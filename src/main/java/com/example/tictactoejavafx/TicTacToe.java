@@ -2,6 +2,7 @@ package com.example.tictactoejavafx;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,10 +14,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class HelloApplication extends Application {
+public class TicTacToe extends Application {
 
     String currentPlayer = "X";
     ArrayList<Button> buttons = new ArrayList<>();
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -25,10 +27,23 @@ public class HelloApplication extends Application {
         Label status = new Label("Turn: " + currentPlayer);
         status.setFont(Font.font("Monospaced", 25));
 
+
         GridPane gameBoard = new GridPane();
         gameBoard.setPadding(new Insets(10, 10, 10, 10));
         gameBoard.setHgap(10);
         gameBoard.setVgap(10);
+
+        Button buttonReset = new Button("Reset game");
+        buttonReset.setFont(Font.font("Monospaced", 25));
+
+        buttonReset.setOnMouseClicked((event) -> {
+            for (Button b : buttons) {
+                currentPlayer = "X";
+                status.setText("Turn: " + currentPlayer);
+                b.setText("");
+
+            }
+        });
 
         for (int i = 0; i < 9; i++) {
             Button button = new Button();
@@ -39,10 +54,11 @@ public class HelloApplication extends Application {
 
                 if (status.getText().startsWith("Winner: ") || status.getText().equals("It's a draw!")) {
                     button.disarm();
+
                 } else if (button.getText().isEmpty()) {
                     button.setText(currentPlayer);
                     if (checkIfWinner()) {
-                        status.setText("The end");
+                        status.setText("The end! " + currentPlayer + " won!");
                     } else if (allBoxesAreFilled()) {
                         status.setText("It's a draw!");
                     } else {
@@ -70,6 +86,7 @@ public class HelloApplication extends Application {
 
         layout.setTop(status);
         layout.setCenter(gameBoard);
+        layout.setBottom(buttonReset);
 
         Scene scene = new Scene(layout);
         stage.setScene(scene);
@@ -77,14 +94,21 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        launch(HelloApplication.class);
+        launch(TicTacToe.class);
+    }
+
+    public void resetGame() {
+
+
     }
 
     public void takeTurn() {
         if (currentPlayer.equals("X")) {
             currentPlayer = "O";
+
         } else if (currentPlayer.equals("O")) {
             currentPlayer = "X";
+
         }
     }
 
